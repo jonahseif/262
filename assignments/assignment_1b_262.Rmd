@@ -1,0 +1,26 @@
+---
+title: "Assignment 1b"
+author: "Jonah Seif"
+date: "2/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Contract
+##### Inputs:
+Flow area (m2), Wet perimeter (m), Channel slope (m/m)
+
+##### Output:
+Flow Rate (m3/s)
+
+##### Parameters:
+Manning's coefficient (unitless), Constant k (m^(1/3) / m^(1/3)), Hydraulic radius (m)
+
+##### Modules:
+- Calculate flow area from a given length and width (flow_area)
+- Utilize gradient measurements to calculate channel slope (channel_slope)
+- Find hydraulic radius given area and wet perimeter (hydraulic_radius)
+- Calculate flow rate using inputs and parameters (flow_rate)

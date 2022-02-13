@@ -7,6 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(devtools)
 ```
 
 I am at the Bren School as I transition out of a career in athletics to a career in the environmental field. With no former professional experience in this setting, I am focused on acquiring hard skills to put on my resume to accompany my former experience. My goal is to work in corporate sustainability and based on my conversations with those in that sector, data plays a huge role. I am eager to learn more about computing for environmental science and also to take modeling next quarter.
