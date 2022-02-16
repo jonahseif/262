@@ -1,0 +1,32 @@
+---
+title: 'Looping: Lecture 4'
+author: "Jonah Seif"
+date: "2/16/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+n = 10
+# create random set of numbers normally distributed
+fert = rnorm(n = n, mean = 5, sd = 0.5)
+ 
+# create data frame of values
+fert_results = data.frame(fertilizer = fert, yield = NA)
+
+# create a for-loop
+# yield = 1.8*fertilizer^2 - 0.5*fertilizer + 0.3*TP
+for (i in 1:n) {
+  f = fert_results$fertilizer[i]
+ fert_results$yield[i] = 1.8*f^2 - 0.5*f + 0.3*20
+}
+sum(fert_results$yield)
+
+# source in crop yield function
+source("../R/crop_yield.R")
+```
+

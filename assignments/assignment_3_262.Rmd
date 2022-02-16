@@ -1,0 +1,42 @@
+---
+title: "Writing Functions Car Example"
+author: "Jonah Seif"
+date: "2/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+# source in vehicle_power function
+source("../R/vehicle_power.R")
+
+# calculate power with given truck mass, surface area, and speeds (30, 22.22, 33.33, 11.11, 1.39)
+vehicle_power(speed = c(30,22.2,33.33,11.11,1.39), mass = 31752, area = 16)
+
+# recalculate with lighter vehicle
+vehicle_power(speed = c(30,22.2,33.33,11.11,1.39), mass = 20000, area = 16)
+```
+
+```{r}
+# store power outcomes as data frame
+power=vehicle_power(speed = c(30,22.2,33.33,11.11,1.39), mass = 31752, area = 16)
+
+power_lighter=vehicle_power(speed = c(30,22.2,33.33,11.11,1.39), mass = 20000, area = 16)
+
+power = as.data.frame(power)
+# plot power vs speed
+power$speed=c(30,22.2,33.33,11.11,1.39)
+# add lighter vehicle powers to existing data frame
+power$lighter=power_lighter
+#make ggplot mapping power vs speed
+ggplot(power, aes(speed,power))+
+  geom_line()+
+  geom_line(aes(speed,lighter), color = "red")
+
+view(power)
+```
+
