@@ -15,11 +15,11 @@ library(ggpubr)
 ```{r}
 #source in autopower function
 source("../R/autopower.R")
-
+View(autopower.R)
 #create data frame for car info
 possible_cars = data.frame(name = c("A","B","C","D"),mass=c(10000,65000,38000,5000), area = c(22,30,22,10))
 
-
+speed_base = 100 * 0.28
 possible_cars$power = autopower(V=speed_base, A = possible_cars$area, m=possible_cars$mass)
 
 ```
@@ -37,8 +37,94 @@ speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
 
 #run each car for all speeds
 powerA = autopower(V=speeds, A = possible_cars$area[1], m=possible_cars$mass[1])
+powerB = autopower(V=speeds, A = possible_cars$area[2], m=possible_cars$mass[2])
+powerC = autopower(V=speeds, A = possible_cars$area[3], m=possible_cars$mass[3])
+powerD = autopower(V=speeds, A = possible_cars$area[4], m=possible_cars$mass[4])
 
+#combine new power data
+powerall1 = cbind.data.frame(powerA, powerB, powerC, powerD)
+colnames(powerall1)=possible_cars$name
+
+#pivot columns into rows for visualization
+powerallr1 = powerall1 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+
+#graph it
+method1_plot = ggplot(powerallr1, aes(car,power, fill=car))+
+  geom_boxplot()+
+  ggtitle("By Hand")
+
+method1_plot
 ```
+
+
+# Next estimate by *pmap*
+
+```{r}
+# create new sample of speeds
+nsample = 200
+mean_speed = log(100*0.277)
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+
+# run each car for all speeds using *pmap*
+powerall2 = pmap(list(A = possible_cars$area, m=possible_cars$mass), autopower, V=speeds)
+
+# turn into data frame
+powerall2 = as.data.frame(powerall2, col.names=possible_cars$name)
+
+# pivot columns into rows
+powerallr2 = powerall2 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+
+# graph new estimates
+method2_plot = ggplot(powerallr2, aes(car,power, fill=car))+
+  geom_boxplot()+
+  ggtitle("pmap")
+
+method2_plot
+
+# two estimate comparison
+head(powerallr2)
+head(powerallr1)
+```
+
+
+# "For" looping 
+
+```{r}
+# generate new speeds again
+possible_cars
+nsample = 200
+mean_speed = log(100*0.277)
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+
+# create data frame to store results of "for loop"
+powerall3 = as.data.frame(matrix(nrow=length(speeds), ncol=nrow(possible_cars)))
+
+# create for loop and index to powerall3 matrix
+for (i in 1:nrow(possible_cars)) {
+  powerall3[,i] = autopower(A=possible_cars$area[i], m=possible_cars$mass[i], V=speeds)
+}
+
+# rename columns in powerall3
+colnames(powerall3)=possible_cars$name
+
+# again, turn columns into row using pivot_longer
+powerallr3 = powerall3 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+
+# plot and visualize
+method3_plot = ggplot(powerallr3, aes(car,power, fill=car))+
+  geom_boxplot()+
+  ggtitle("For Loop")
+
+method3_plot
+
+# arrange to compare plots
+ggarrange(method1_plot, method2_plot, method3_plot, nrow=3)
+```
+
+
+
+
+
 
 
 
