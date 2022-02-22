@@ -1,0 +1,45 @@
+---
+title: "Assigment 4: Car Looping"
+author: "Jonah Seif"
+date: "2/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(ggpubr)
+```
+
+```{r}
+#source in autopower function
+source("../R/autopower.R")
+
+#create data frame for car info
+possible_cars = data.frame(name = c("A","B","C","D"),mass=c(10000,65000,38000,5000), area = c(22,30,22,10))
+
+
+possible_cars$power = autopower(V=speed_base, A = possible_cars$area, m=possible_cars$mass)
+
+```
+
+
+# Estimate by hand
+```{r}
+#data frame
+possible_cars
+
+#crate a sample of normally distributed speeds with mean 100km/hr
+nsample = 200
+mean_speed = log(100*0.277)
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+
+#run each car for all speeds
+powerA = autopower(V=speeds, A = possible_cars$area[1], m=possible_cars$mass[1])
+
+```
+
+
+
+
