@@ -1,0 +1,79 @@
+---
+title: "Assignment 4 (w/ Taylor)"
+author: "Jonah Seif"
+date: "2/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(purrr)
+library(ggpubr)
+```
+
+# Looping with changes to sea rise and coastline
+
+```{r}
+# source searise function
+source("../R/searise.R")
+
+# generate data for sea level rise values
+r = seq(from=1, to=5, by=0.5)
+
+# generate coastline length values
+c = seq(from=100, to=10000, by=100)
+
+# run simple function check
+sr1 = searise(r = r[1], c = c[1])
+
+# create a data frame to store results
+searise_data = data.frame(matrix(nrow=length(r), ncol=length(c)))
+
+# use a for loop to fill data frame
+ for (i in 1:length(r)) {
+         for (j in 1:length(c)) {
+       searise_data[i,j]= searise(r=r[i],c=c[j] )
+         }
+ }
+
+# add row and column names
+colnames(searise_data)=c
+rownames(searise_data)=r
+
+
+# add column for damages and pivot longer for visualization
+searise_data$rise = rownames(searise_data)
+searise_gg = searise_data %>% pivot_longer(!rise,names_to="coast", values_to="damages")
+
+# visualize
+ggplot(searise_gg, aes(x=rise, y=damages, col=coast))+
+  geom_point()+
+  labs(col="coastline")
+```
+
+# Loop using *pmap*
+
+```{r}
+# generate data for sea level rise values
+r = seq(from=1, to=5, by=0.5)
+
+# generate coastline length values
+c = seq(from=100, to=10000, by=100)
+
+# use pmap to run sequences
+searise_pmap = pmap(list(c = c), searise, r=r)
+
+# create data frame 
+sr_pmap_data = as.data.frame(searise_pmap, row.names = r, col.names = c)
+
+# clean and pivot data frame
+sr_pmap_data$rise = rownames(sr_pmap_data)
+sr_pmap_gg = sr_pmap_data %>% pivot_longer(!rise,names_to="coast", values_to="damages")
+
+# graph and visualize
+ggplot(sr_pmap_gg, aes(x=rise, y=damages, col=coast))+
+  geom_point()+
+  labs(col="coastline")
+```
+
