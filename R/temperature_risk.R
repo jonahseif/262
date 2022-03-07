@@ -22,5 +22,5 @@ temperature_risk = function(temperature, age, income) {
                     extreme_temperature == "med" &
                       age_threshold != "low" & income_threshold != "high" ~ "med",
                     extreme_temperature == "high" & age_threshold != "low" & income_threshold != "high" ~ "high")
-  return(list(risk_low = (risk == "low"), total_extreme_events = sum(extreme_temperature != "low")))
+  return(list(risk_low = sum(risk == "low", na.rm = TRUE), risk_med = sum(risk == "med", na.rm = TRUE), risk_high = sum(risk == "high", na.rm = TRUE), total_extreme_events = sum(extreme_temperature != "low")))
 }

@@ -15,6 +15,7 @@ library(tidyr)
 ```
 
 ```{r}
+# create a variable 'n' for rows in tmax
 n = 7920
 # read in temperature data
 temperature <- read_tsv(here("data", "tmax.txt"), col_names = TRUE, show_col_types = FALSE) 
