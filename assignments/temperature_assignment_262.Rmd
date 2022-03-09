@@ -15,23 +15,18 @@ library(tidyr)
 ```
 
 ```{r}
-# create a variable 'n' for rows in tmax
-n = 7920
-# read in temperature data
-temperature <- read_tsv(here("data", "tmax.txt"), col_names = TRUE, show_col_types = FALSE) 
-
-# create a normal distribution of age 
-age = rnorm(n = n, mean = 50, sd = 10)
-# make a data frame of age data
-age = as.data.frame(age)
-
-# create a normal distribution of income
-income = rnorm(n = n, mean = 65000, sd = 20000)
-# make a data frame of income data
-income = as.data.frame(income)
+# create a variable 'n' for number of individuals
+n = 1000
 
 # source in temperature risk function
 source("../R/temperature_risk.R")
+
+# read in temperature data
+temperature_df <- read_tsv(here("data", "tmax.txt"), col_names = TRUE, show_col_types = FALSE) 
+
+# generate data for age and income
+age = rnorm(n, mean = 45, sd = 15)
+income = rnorm(n, mean = 50000, sd = 10000)
 
 # run function with temp, age, and income
 temperature_risk(temperature=temperature$tmax, age=age, income = income)

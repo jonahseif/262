@@ -1,0 +1,29 @@
+---
+title: "Fish Catch"
+author: "Jonah Seif"
+date: "2/28/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(here)
+source("../R/fishcatch.R")
+```
+
+```{r}
+fish <- read_tsv(here("data", "fish.txt"), col_names = TRUE, show_col_types = FALSE) %>% transmute(fish_species = x)
+
+
+fish_factor = as.factor(fish$fish_species)
+fish_total = as.character(fish_factor)
+fish_total = as.numeric(fish_total)
+total_catch = sum(fish_total)
+
+
+
+fish_catch(fish)
+```
+
